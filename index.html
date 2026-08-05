@@ -434,14 +434,14 @@
           <i class="fa-solid fa-party-horn"></i> 🎉 Confetti
         </button>
         <button class="icon-btn" onclick="toggleAudio()">
-          <i class="fa-solid fa-music" id="musicIcon"></i> Music
+          <i class="fa-solid fa-music" id="musicIcon"></i> Sound
         </button>
       </div>
     </div>
   </div>
 
-  <!-- Audio Asset -->
-  <audio id="bgMusic" loop src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8a73562.mp3?filename=happy-birthday-152002.mp3"></audio>
+  <!-- Reliable MP3 Audio Source -->
+  <audio id="bgMusic" loop preload="auto" src="https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=happy-birthday-11320.mp3"></audio>
 
   <script>
     let currentStep = 1;
@@ -461,10 +461,8 @@
       document.getElementById(`dot${currentStep}`).classList.add('active');
 
       if (stepNumber === 2) {
-        // Start background music when opening
-        bgMusic.play().then(() => {
-          musicIcon.className = 'fa-solid fa-volume-high';
-        }).catch(() => {});
+        // Start playing music on first user click to bypass browser restrictions
+        playAudio();
         launchConfetti();
       }
 
@@ -515,10 +513,18 @@
       });
     }
 
+    function playAudio() {
+      bgMusic.play().then(() => {
+        musicIcon.className = 'fa-solid fa-volume-high';
+      }).catch((err) => {
+        console.log("Audio play blocked by browser:", err);
+        musicIcon.className = 'fa-solid fa-volume-xmark';
+      });
+    }
+
     function toggleAudio() {
       if (bgMusic.paused) {
-        bgMusic.play();
-        musicIcon.className = 'fa-solid fa-volume-high';
+        playAudio();
       } else {
         bgMusic.pause();
         musicIcon.className = 'fa-solid fa-volume-xmark';
