@@ -434,23 +434,120 @@
           <i class="fa-solid fa-party-horn"></i> 🎉 Confetti
         </button>
         <button class="icon-btn" onclick="toggleAudio()">
-          <i class="fa-solid fa-music" id="musicIcon"></i> Sound
+          <i class="fa-solid fa-volume-high" id="musicIcon"></i> <span id="musicText">Music</span>
         </button>
       </div>
     </div>
   </div>
 
-  <!-- Reliable MP3 Audio Source -->
-  <audio id="bgMusic" loop preload="auto" src="https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=happy-birthday-11320.mp3"></audio>
-
   <script>
     let currentStep = 1;
-    const bgMusic = document.getElementById('bgMusic');
-    const musicIcon = document.getElementById('musicIcon');
     const flame = document.getElementById('flame');
     const step2NextBtn = document.getElementById('step2NextBtn');
     const candleInstruction = document.getElementById('candleInstruction');
+    const musicIcon = document.getElementById('musicIcon');
+    const musicText = document.getElementById('musicText');
 
+    /* Web Audio API Synthesizer for 100% reliable Happy Birthday Melody */
+    let audioCtx = null;
+    let isPlaying = false;
+    let musicTimeout = null;
+
+    const melody = [
+      { note: 261.63, duration: 0.35 }, { note: 261.63, duration: 0.15 }, // Happy
+      { note: 293.66, duration: 0.5 },  // Birth-
+      { note: 261.63, duration: 0.5 },  // -day
+      { note: 349.23, duration: 0.5 },  // To
+      { note: 329.63, duration: 1.0 },  // You
+
+      { note: 261.63, duration: 0.35 }, { note: 261.63, duration: 0.15 }, // Happy
+      { note: 293.66, duration: 0.5 },  // Birth-
+      { note: 261.63, duration: 0.5 },  // -day
+      { note: 392.00, duration: 0.5 },  // To
+      { note: 349.23, duration: 1.0 },  // You
+
+      { note: 261.63, duration: 0.35 }, { note: 261.63, duration: 0.15 }, // Happy
+      { note: 523.25, duration: 0.5 },  // Birth-
+      { note: 440.00, duration: 0.5 },  // -day
+      { note: 349.23, duration: 0.5 },  // Dear
+      { note: 329.63, duration: 0.5 },  // Cu-
+      { note: 293.66, duration: 0.8 },  // -tie
+
+      { note: 466.16, duration: 0.35 }, { note: 466.16, duration: 0.15 }, // Happy
+      { note: 440.00, duration: 0.5 },  // Birth-
+      { note: 349.23, duration: 0.5 },  // -day
+      { note: 392.00, duration: 0.5 },  // To
+      { note: 349.23, duration: 1.2 }   // You
+    ];
+
+    function playTone(freq, duration, startTime) {
+      if (!isPlaying) return;
+      
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(freq, startTime);
+
+      // Smooth envelope to sound like soft chime/music box
+      gain.gain.setValueAtTime(0.01, startTime);
+      gain.gain.exponentialRampToValueAtTime(0.2, startTime + 0.05);
+      gain.gain.exponentialRampToValueAtTime(0.001, startTime + duration - 0.05);
+
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+
+      osc.start(startTime);
+      osc.stop(startTime + duration);
+    }
+
+    function playMelodyLoop() {
+      if (!isPlaying) return;
+
+      let currentTime = audioCtx.currentTime + 0.1;
+
+      melody.forEach(item => {
+        playTone(item.note, item.duration, currentTime);
+        currentTime += item.duration + 0.08;
+      });
+
+      // Loop after completion
+      const totalDuration = (currentTime - audioCtx.currentTime) * 1000;
+      musicTimeout = setTimeout(() => {
+        if (isPlaying) playMelodyLoop();
+      }, totalDuration + 500);
+    }
+
+    function startSynthMusic() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+      
+      isPlaying = true;
+      musicIcon.className = 'fa-solid fa-volume-high';
+      musicText.innerText = "Music On";
+      playMelodyLoop();
+    }
+
+    function stopSynthMusic() {
+      isPlaying = false;
+      if (musicTimeout) clearTimeout(musicTimeout);
+      musicIcon.className = 'fa-solid fa-volume-xmark';
+      musicText.innerText = "Music Off";
+    }
+
+    function toggleAudio() {
+      if (isPlaying) {
+        stopSynthMusic();
+      } else {
+        startSynthMusic();
+      }
+    }
+
+    /* Page Navigation Logic */
     function nextStep(stepNumber) {
       document.getElementById(`step${currentStep}`).classList.remove('active');
       document.getElementById(`dot${currentStep}`).classList.remove('active');
@@ -461,8 +558,7 @@
       document.getElementById(`dot${currentStep}`).classList.add('active');
 
       if (stepNumber === 2) {
-        // Start playing music on first user click to bypass browser restrictions
-        playAudio();
+        startSynthMusic();
         launchConfetti();
       }
 
@@ -511,24 +607,6 @@
         origin: { y: 0.6 },
         colors: ['#ff79c6', '#bd93f9', '#f1fa8c', '#ffb86c']
       });
-    }
-
-    function playAudio() {
-      bgMusic.play().then(() => {
-        musicIcon.className = 'fa-solid fa-volume-high';
-      }).catch((err) => {
-        console.log("Audio play blocked by browser:", err);
-        musicIcon.className = 'fa-solid fa-volume-xmark';
-      });
-    }
-
-    function toggleAudio() {
-      if (bgMusic.paused) {
-        playAudio();
-      } else {
-        bgMusic.pause();
-        musicIcon.className = 'fa-solid fa-volume-xmark';
-      }
     }
   </script>
 </body>
