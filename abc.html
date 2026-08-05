@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="hi">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Happy Birthday Vamika Cutie! ✨</title>
+  <title>Happy Birthday Vamika! ✨</title>
   
-  <!-- Google Fonts & Icons -->
+  <!-- Google Fonts & FontAwesome -->
   <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Fredoka+One&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
@@ -19,7 +19,7 @@
 
     body {
       min-height: 100vh;
-      background: #0d0818;
+      background: #0f0a1c;
       font-family: 'Plus Jakarta Sans', sans-serif;
       color: #ffffff;
       display: flex;
@@ -30,13 +30,13 @@
       position: relative;
     }
 
-    /* Ambient Floating Glows */
+    /* Floating Bokeh & Glow Effects */
     .bg-glow-1 {
       position: fixed;
       top: 10%;
       left: 15%;
-      width: 320px;
-      height: 320px;
+      width: 300px;
+      height: 300px;
       background: radial-gradient(circle, rgba(255, 121, 198, 0.25) 0%, rgba(0,0,0,0) 70%);
       pointer-events: none;
       animation: floatGlow 6s ease-in-out infinite alternate;
@@ -67,81 +67,130 @@
       -webkit-backdrop-filter: blur(20px);
       border: 1px solid rgba(255, 255, 255, 0.12);
       border-radius: 32px;
-      padding: 40px 28px;
-      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+      padding: 40px 30px;
+      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.2);
       text-align: center;
       position: relative;
       z-index: 10;
     }
 
-    /* Progress Indicator dots */
-    .step-dots {
+    /* Unopened State */
+    .reveal-box {
       display: flex;
-      justify-content: center;
-      gap: 8px;
-      margin-bottom: 25px;
+      flex-direction: column;
+      align-items: center;
+      gap: 22px;
+      transition: all 0.5s ease;
     }
 
-    .dot {
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.2);
-      transition: all 0.3s ease;
+    .gift-wrapper {
+      position: relative;
+      cursor: pointer;
     }
 
-    .dot.active {
-      background: #ff79c6;
-      width: 24px;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(255, 121, 198, 0.6);
-    }
-
-    /* Steps Display Controls */
-    .step {
-      display: none;
-      animation: fadeIn 0.6s ease forwards;
-    }
-
-    .step.active {
-      display: block;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(15px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    /* Step 1 Elements */
     .gift-icon {
-      font-size: 85px;
+      font-size: 80px;
       background: linear-gradient(135deg, #ff79c6, #ffb86c);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       filter: drop-shadow(0 0 20px rgba(255, 121, 198, 0.5));
       animation: pulseGift 2s ease-in-out infinite;
-      cursor: pointer;
-      margin-bottom: 20px;
+      transition: transform 0.3s ease;
+    }
+
+    .gift-wrapper:hover .gift-icon {
+      transform: scale(1.1) rotate(6deg);
     }
 
     @keyframes pulseGift {
       0%, 100% { transform: scale(1) translateY(0); }
-      50% { transform: scale(1.08) translateY(-8px); }
+      50% { transform: scale(1.05) translateY(-10px); }
     }
 
     .teaser-title {
       font-family: 'Dancing Script', cursive;
       font-size: 34px;
       color: #ff79c6;
-      margin-bottom: 10px;
     }
 
-    /* Step 2 Interactive Cake */
+    .teaser-text {
+      color: #d8dee9;
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    .surprise-btn {
+      background: linear-gradient(135deg, #ff79c6, #bd93f9);
+      color: #ffffff;
+      border: none;
+      padding: 16px 38px;
+      font-size: 17px;
+      font-weight: 700;
+      border-radius: 50px;
+      cursor: pointer;
+      box-shadow: 0 12px 28px rgba(255, 121, 198, 0.4);
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      letter-spacing: 0.5px;
+    }
+
+    .surprise-btn:hover {
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 16px 36px rgba(255, 121, 198, 0.6);
+    }
+
+    /* Opened Content State */
+    .surprise-content {
+      display: none;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .surprise-content.active {
+      display: block;
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .nickname-tag {
+      display: inline-block;
+      background: rgba(255, 121, 198, 0.15);
+      border: 1px solid rgba(255, 121, 198, 0.3);
+      color: #ff79c6;
+      padding: 6px 18px;
+      border-radius: 30px;
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 15px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      font-family: 'Fredoka One', cursive;
+      font-size: 38px;
+      background: linear-gradient(135deg, #ff79c6, #bd93f9, #f1fa8c);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 8px;
+    }
+
+    .sub-title {
+      font-size: 16px;
+      color: #e5e9f0;
+      margin-bottom: 25px;
+      font-weight: 500;
+    }
+
+    /* Interactive Candle/Cake */
     .cake-wrapper {
       position: relative;
-      margin: 25px auto 20px;
-      width: 110px;
-      height: 110px;
+      margin: 20px auto 30px;
+      width: 120px;
+      height: 120px;
       cursor: pointer;
     }
 
@@ -153,11 +202,11 @@
 
     .flame {
       position: absolute;
-      top: 2px;
+      top: 5px;
       left: 50%;
       transform: translateX(-50%);
-      width: 14px;
-      height: 22px;
+      width: 16px;
+      height: 24px;
       background: radial-gradient(circle, #f1fa8c 0%, #ff79c6 100%);
       border-radius: 50% 50% 20% 20%;
       box-shadow: 0 0 18px #f1fa8c;
@@ -173,98 +222,61 @@
       display: none;
     }
 
-    .nickname-tag {
-      display: inline-block;
-      background: rgba(255, 121, 198, 0.15);
-      border: 1px solid rgba(255, 121, 198, 0.3);
-      color: #ff79c6;
-      padding: 6px 20px;
-      border-radius: 30px;
-      font-size: 14px;
-      font-weight: 600;
-      margin-bottom: 15px;
-      letter-spacing: 1px;
-    }
-
-    h1 {
-      font-family: 'Fredoka One', cursive;
-      font-size: 38px;
-      background: linear-gradient(135deg, #ff79c6, #bd93f9, #f1fa8c);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      margin-bottom: 8px;
-    }
-
-    /* Card Box Styles */
-    .shayri-box {
-      font-style: italic;
-      color: #f1fa8c;
-      background: rgba(241, 250, 140, 0.06);
-      border-left: 3px solid #f1fa8c;
-      padding: 16px 18px;
-      border-radius: 0 16px 16px 0;
-      margin: 20px 0;
-      font-size: 15px;
-      line-height: 1.8;
-      text-align: left;
-    }
-
-    .card-box {
+    /* Cards Layout */
+    .manifesto-card {
       background: rgba(255, 255, 255, 0.04);
       border: 1px solid rgba(255, 255, 255, 0.08);
       border-radius: 20px;
-      padding: 22px 20px;
-      margin-top: 15px;
+      padding: 25px 22px;
+      margin-top: 20px;
       text-align: left;
     }
 
-    .card-box p {
-      font-size: 15px;
-      line-height: 1.8;
-      color: #d8dee9;
+    .manifesto-card h3 {
+      font-size: 17px;
+      color: #ff79c6;
       margin-bottom: 12px;
-    }
-
-    .song-lyric {
       display: flex;
       align-items: center;
-      gap: 10px;
-      background: rgba(189, 147, 249, 0.1);
-      border: 1px dashed rgba(189, 147, 249, 0.4);
-      padding: 12px 14px;
-      border-radius: 14px;
-      margin-top: 12px;
-      font-size: 14px;
-      color: #bd93f9;
-      font-weight: 500;
+      gap: 8px;
     }
 
-    .quote-tag {
+    .manifesto-card p {
+      font-size: 14.5px;
+      line-height: 1.75;
+      color: #d8dee9;
+      margin-bottom: 14px;
+    }
+
+    .manifesto-card p strong {
       color: #f1fa8c;
-      font-style: italic;
       font-weight: 600;
     }
 
-    /* Grid for Road Trips & Future Plans */
+    .manifesto-card p:last-child {
+      margin-bottom: 0;
+    }
+
+    /* Bucket List / Travel Grid */
     .travel-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 12px;
-      margin-top: 18px;
+      margin-top: 20px;
     }
 
     .travel-item {
       background: rgba(189, 147, 249, 0.08);
       border: 1px solid rgba(189, 147, 249, 0.2);
       border-radius: 14px;
-      padding: 12px;
+      padding: 14px;
       text-align: center;
     }
 
     .travel-item i {
-      font-size: 20px;
+      font-size: 22px;
       color: #bd93f9;
-      margin-bottom: 5px;
+      margin-bottom: 6px;
     }
 
     .travel-item span {
@@ -274,41 +286,19 @@
       color: #f8f8f2;
     }
 
-    /* Buttons */
-    .primary-btn {
-      background: linear-gradient(135deg, #ff79c6, #bd93f9);
-      color: #ffffff;
-      border: none;
-      padding: 16px 36px;
-      font-size: 16px;
-      font-weight: 700;
-      border-radius: 50px;
-      cursor: pointer;
-      box-shadow: 0 12px 28px rgba(255, 121, 198, 0.4);
-      transition: all 0.3s ease;
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      margin-top: 20px;
-    }
-
-    .primary-btn:hover {
-      transform: translateY(-3px) scale(1.02);
-      box-shadow: 0 16px 36px rgba(255, 121, 198, 0.6);
-    }
-
+    /* Action Controls */
     .actions {
-      margin-top: 25px;
+      margin-top: 28px;
       display: flex;
       justify-content: center;
-      gap: 12px;
+      gap: 15px;
     }
 
     .icon-btn {
       background: rgba(255, 255, 255, 0.08);
       border: 1px solid rgba(255, 255, 255, 0.18);
       color: #fff;
-      padding: 12px 22px;
+      padding: 12px 24px;
       border-radius: 30px;
       display: flex;
       align-items: center;
@@ -322,6 +312,7 @@
     .icon-btn:hover {
       background: rgba(255, 121, 198, 0.25);
       border-color: #ff79c6;
+      transform: translateY(-2deg);
     }
   </style>
 </head>
@@ -331,110 +322,65 @@
   <div class="bg-glow-2"></div>
 
   <div class="container">
-    <!-- Step Dots -->
-    <div class="step-dots">
-      <div class="dot active" id="dot1"></div>
-      <div class="dot" id="dot2"></div>
-      <div class="dot" id="dot3"></div>
-      <div class="dot" id="dot4"></div>
-    </div>
-
-    <!-- STEP 1: Unwrap Experience -->
-    <div class="step active" id="step1">
-      <div onclick="nextStep(2)">
+    <!-- Unopened State -->
+    <div class="reveal-box" id="revealBox">
+      <div class="gift-wrapper" onclick="revealSurprise()">
         <i class="fa-solid fa-gift gift-icon"></i>
       </div>
       <h2 class="teaser-title">Hey Cutie, a surprise awaits! ✨</h2>
-      <p style="color: #d8dee9; font-size: 15px; line-height: 1.6;">
+      <p class="teaser-text">
         Today is all about celebrating you, your strength, your beautiful smile, and all the magical days ahead.
       </p>
-      <button class="primary-btn" onclick="nextStep(2)">
-        Unwrap Surprise <i class="fa-solid fa-wand-magic-sparkles"></i>
+      <button class="surprise-btn" onclick="revealSurprise()">
+        Unwrap Birthday Surprise <i class="fa-solid fa-wand-magic-sparkles"></i>
       </button>
     </div>
 
-    <!-- STEP 2: Make a Wish & Blow Flame -->
-    <div class="step" id="step2">
+    <!-- Opened Surprise State -->
+    <div class="surprise-content" id="surpriseContent">
       <div class="nickname-tag">💖 Happy Birthday Cutie 💖</div>
       <h1>VAMIKA</h1>
-      
-      <div class="cake-wrapper" onclick="blowFlame()" title="Tap flame to blow it out!">
+      <p class="sub-title">To radiant health, boundless laughter & endless adventures!</p>
+
+      <!-- Cake & Candle -->
+      <div class="cake-wrapper" onclick="toggleCandle()" title="Make a wish & tap to blow out!">
         <div class="flame" id="flame"></div>
         <i class="fa-solid fa-cake-candles cake-icon"></i>
       </div>
-      <p id="candleInstruction" style="font-size: 13px; color: #bd93f9; font-weight: 600;">
-        (Make a wish & tap the flame to blow it out! 🕯️)
+      <p style="font-size: 12px; color: #bd93f9; margin-top: -20px; font-weight: 500;">
+        (Make a wish & tap the flame!)
       </p>
 
-      <button class="primary-btn" id="step2NextBtn" style="display: none;" onclick="nextStep(3)">
-        Read Your Wish <i class="fa-solid fa-arrow-right"></i>
-      </button>
-    </div>
+      <!-- Manifestation Message -->
 
-    <!-- STEP 3: Shayari & Song Vibes -->
-    <div class="step" id="step3">
-      <div class="nickname-tag">✨ Special Message ✨</div>
-      
-      <div class="shayri-box">
-        "हर दुआ में तेरा नाम आया है,<br>
-        तू हंसे हमेशा, ये पैगाम आया है!<br>
-        तेरी सेहत से चमक उठे तेरी दुनिया,<br>
-        खुदा से तेरे लिए बस यही वरदान आया है!" ✨
-      </div>
-
-      <div class="card-box">
-        <div class="song-lyric">
-          <i class="fa-solid fa-music" style="color: #ff79c6;"></i>
-          <span>"तू जो मिला तो हो गए हम काबिल..."</span>
-        </div>
-        <p style="margin-top: 14px;">
-          बस तुम्हारी 100% अच्छी सेहत और ढेर सारी खुशियों की दुआ है।
+      <div class="manifesto-card">
+        <h3><i class="fa-solid fa-sparkles"></i> 4 U</h3>
+   "हर दुआ में तेरा नाम आया है,<br>
+    तू हंसे हमेशा, ये पैगाम आया है!<br>
+    तेरी सेहत से चमक उठे तेरी दुनिया,<br>
+    खुदा से तेरे लिए बस यही वरदान आया है!" ✨
+        <p>
+          Happy Birthday Cutie! 💖
+          🎵 "तू जो मिला तो हो गए हम काबिल..."
         </p>
-      </div>
-
-      <button class="primary-btn" onclick="nextStep(4)">
-        One More Thing... <i class="fa-solid fa-heart"></i>
-      </button>
-    </div>
-
-    <!-- STEP 4: Life Promises & Future Trips -->
-    <div class="step" id="step4">
-      <div class="nickname-tag">🚗 Our Next Chapter 🌟</div>
-
-      <div class="card-box">
+          <p>
+          बस तुम्हारी 100% अच्छी सेहत और ढेर सारी खुशियों की दुआ है।
+          </p>
         <p>
           Remember, life isn't standing still — make amazing memories, and laugh until our cheeks hurt. 💖
         </p>
-        <p class="quote-tag" style="margin-top: 10px;">
+        <p>
           "You're a sky full of stars, and the best is yet to come!" ✨
         </p>
       </div>
-
-      <div class="travel-grid">
-        <div class="travel-item">
-          <i class="fa-solid fa-plane-departure"></i>
-          <span>More Road Trips</span>
-        </div>
-        <div class="travel-item">
-          <i class="fa-solid fa-mug-hot"></i>
-          <span>Frequent Meetups</span>
-        </div>
-        <div class="travel-item">
-          <i class="fa-solid fa-sparkles"></i>
-          <span>100% Health</span>
-        </div>
-        <div class="travel-item">
-          <i class="fa-solid fa-face-smile-beam"></i>
-          <span>Best Life Ever</span>
-        </div>
-      </div>
-
+      
+      <!-- Action Controls -->
       <div class="actions">
         <button class="icon-btn" onclick="triggerMoreConfetti()">
-          <i class="fa-solid fa-party-horn"></i> 🎉 Confetti
+          <i class="fa-solid fa-party-horn"></i> More Confetti 🎉
         </button>
         <button class="icon-btn" onclick="toggleAudio()">
-          <i class="fa-solid fa-music" id="musicIcon"></i> Music
+          <i class="fa-solid fa-music" id="musicIcon"></i> Sound
         </button>
       </div>
     </div>
@@ -444,58 +390,41 @@
   <audio id="bgMusic" loop src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8a73562.mp3?filename=happy-birthday-152002.mp3"></audio>
 
   <script>
-    let currentStep = 1;
+    const revealBox = document.getElementById('revealBox');
+    const surpriseContent = document.getElementById('surpriseContent');
     const bgMusic = document.getElementById('bgMusic');
     const musicIcon = document.getElementById('musicIcon');
     const flame = document.getElementById('flame');
-    const step2NextBtn = document.getElementById('step2NextBtn');
-    const candleInstruction = document.getElementById('candleInstruction');
 
-    function nextStep(stepNumber) {
-      document.getElementById(`step${currentStep}`).classList.remove('active');
-      document.getElementById(`dot${currentStep}`).classList.remove('active');
+    function revealSurprise() {
+      revealBox.style.display = 'none';
+      surpriseContent.classList.add('active');
 
-      currentStep = stepNumber;
+      // Play Audio
+      bgMusic.play().then(() => {
+        musicIcon.classList.replace('fa-music', 'fa-volume-high');
+      }).catch(() => {});
 
-      document.getElementById(`step${currentStep}`).classList.add('active');
-      document.getElementById(`dot${currentStep}`).classList.add('active');
-
-      if (stepNumber === 2) {
-        // Start background music when opening
-        bgMusic.play().then(() => {
-          musicIcon.className = 'fa-solid fa-volume-high';
-        }).catch(() => {});
-        launchConfetti();
-      }
-
-      if (stepNumber === 4) {
-        triggerMoreConfetti();
-      }
-    }
-
-    function blowFlame() {
-      flame.classList.add('blown-out');
-      candleInstruction.innerText = "Wish made! ✨ Click below to unlock your message.";
-      step2NextBtn.style.display = 'inline-flex';
-      triggerMoreConfetti();
+      // Launch Confetti
+      launchConfetti();
     }
 
     function launchConfetti() {
-      const duration = 2.5 * 1000;
+      const duration = 3.5 * 1000;
       const end = Date.now() + duration;
 
       (function frame() {
         confetti({
-          particleCount: 5,
+          particleCount: 6,
           angle: 60,
-          spread: 55,
+          spread: 60,
           origin: { x: 0 },
           colors: ['#ff79c6', '#bd93f9', '#f1fa8c', '#8be9fd']
         });
         confetti({
-          particleCount: 5,
+          particleCount: 6,
           angle: 120,
-          spread: 55,
+          spread: 60,
           origin: { x: 1 },
           colors: ['#ff79c6', '#bd93f9', '#f1fa8c', '#8be9fd']
         });
@@ -513,6 +442,13 @@
         origin: { y: 0.6 },
         colors: ['#ff79c6', '#bd93f9', '#f1fa8c', '#ffb86c']
       });
+    }
+
+    function toggleCandle() {
+      flame.classList.toggle('blown-out');
+      if (flame.classList.contains('blown-out')) {
+        triggerMoreConfetti();
+      }
     }
 
     function toggleAudio() {
