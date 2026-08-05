@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Happy Birthday Surprise! 🎉</title>
+  
+  <!-- Fonts and Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      background: linear-gradient(135deg, #0d0f1a, #1a1c2e, #2d1b36);
+      font-family: 'Poppins', sans-serif;
+      color: #ffffff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow-x: hidden;
+      padding: 20px;
+    }
+
+    /* Ambient Background Glow */
+    .glow-circle {
+      position: absolute;
+      width: 350px;
+      height: 350px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255, 107, 129, 0.25) 0%, rgba(0,0,0,0) 70%);
+      pointer-events: none;
+      animation: pulseGlow 4s infinite alternate;
+    }
+
+    @keyframes pulseGlow {
+      from { transform: scale(0.9); opacity: 0.6; }
+      to { transform: scale(1.2); opacity: 1; }
+    }
+
+    .container {
+      width: 100%;
+      max-width: 520px;
+      background: rgba(255, 255, 255, 0.06);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 28px;
+      padding: 40px 30px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+      text-align: center;
+      position: relative;
+      z-index: 10;
+    }
+
+    /* Initial Reveal State */
+    .reveal-box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      transition: all 0.5s ease;
+    }
+
+    .gift-icon {
+      font-size: 70px;
+      color: #ff4757;
+      filter: drop-shadow(0 0 15px rgba(255, 71, 87, 0.6));
+      animation: float 2.5s ease-in-out infinite;
+      cursor: pointer;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-12px) rotate(5deg); }
+    }
+
+    .surprise-btn {
+      background: linear-gradient(45deg, #ff4757, #ff6b81);
+      color: #fff;
+      border: none;
+      padding: 16px 36px;
+      font-size: 18px;
+      font-weight: 700;
+      border-radius: 50px;
+      cursor: pointer;
+      box-shadow: 0 10px 25px rgba(255, 71, 87, 0.4);
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .surprise-btn:hover {
+      transform: translateY(-3px) scale(1.03);
+      box-shadow: 0 15px 30px rgba(255, 71, 87, 0.6);
+    }
+
+    /* Surprise Content (Hidden initially) */
+    .surprise-content {
+      display: none;
+      opacity: 0;
+      transform: scale(0.9);
+      transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .surprise-content.active {
+      display: block;
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    h1 {
+      font-family: 'Fredoka One', cursive;
+      font-size: 38px;
+      background: linear-gradient(45deg, #ff7675, #fd79a8, #ffeaa7);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 15px;
+      line-height: 1.2;
+    }
+
+    .sub-title {
+      font-size: 18px;
+      color: #dfe6e9;
+      margin-bottom: 25px;
+      font-weight: 400;
+    }
+
+    /* Interactive Birthday Cake */
+    .cake-wrapper {
+      position: relative;
+      margin: 30px auto;
+      width: 120px;
+      height: 120px;
+      cursor: pointer;
+    }
+
+    .cake-icon {
+      font-size: 80px;
+      color: #fd79a8;
+      filter: drop-shadow(0 0 15px rgba(253, 121, 168, 0.5));
+    }
+
+    .flame {
+      position: absolute;
+      top: 5px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 14px;
+      height: 22px;
+      background: radial-gradient(circle, #ffeaa7 0%, #ff7675 100%);
+      border-radius: 50% 50% 20% 20%;
+      box-shadow: 0 0 15px #ffeaa7;
+      animation: flicker 0.6s infinite alternate;
+    }
+
+    @keyframes flicker {
+      0% { transform: translateX(-50%) scale(1) rotate(-2deg); }
+      100% { transform: translateX(-50%) scale(1.15) rotate(2deg); }
+    }
+
+    .flame.blown-out {
+      display: none;
+    }
+
+    /* Card Box / Wish Note */
+    .wish-card {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      padding: 22px;
+      margin-top: 20px;
+      text-align: left;
+    }
+
+    .wish-card p {
+      font-size: 15px;
+      line-height: 1.7;
+      color: #b2bec3;
+      margin-bottom: 12px;
+    }
+
+    .wish-card p span {
+      color: #ffeaa7;
+      font-weight: 600;
+    }
+
+    .wish-card p:last-child {
+      margin-bottom: 0;
+    }
+
+    /* Actions & Controls */
+    .actions {
+      margin-top: 25px;
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    .icon-btn {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #fff;
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 18px;
+      transition: all 0.3s ease;
+    }
+
+    .icon-btn:hover {
+      background: rgba(255, 255, 255, 0.25);
+      transform: scale(1.1);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="glow-circle"></div>
+
+  <div class="container">
+    <!-- State 1: Before Click -->
+    <div class="reveal-box" id="revealBox">
+      <i class="fa-solid fa-gift gift-icon" onclick="revealSurprise()"></i>
+      <h2>A Special Delivery For You!</h2>
+      <p style="color: #a4b0be; font-size: 14px;">Tap the gift or button below to unwrap your surprise.</p>
+      <button class="surprise-btn" onclick="revealSurprise()">
+        Open Surprise <i class="fa-solid fa-wand-magic-sparkles"></i>
+      </button>
+    </div>
+
+    <!-- State 2: Unwrapped Surprise -->
+    <div class="surprise-content" id="surpriseContent">
+      <h1>Happy Birthday! 🎂</h1>
+      <p class="sub-title">Wishing you a day filled with joy, laughter, and endless magic.</p>
+
+      <!-- Interactive Candle/Cake -->
+      <div class="cake-wrapper" title="Click to blow out candle!" onclick="toggleCandle()">
+        <div class="flame" id="flame"></div>
+        <i class="fa-solid fa-cake-candles cake-icon"></i>
+      </div>
+      <p style="font-size: 12px; color: #a4b0be; margin-top: -15px;">(Tap the candle to blow it out!)</p>
+
+      <!-- Personal Wishes Card -->
+      <div class="wish-card">
+        <p>Dear <span>Birthday Star</span>,</p>
+        <p>May this year bring you closer to your biggest dreams, fill your days with bright smiles, and surround you with love and happiness.</p>
+        <p>Keep shining bright and rocking the world! ✨</p>
+      </div>
+
+      <!-- Quick Action Controls -->
+      <div class="actions">
+        <button class="icon-btn" onclick="triggerMoreConfetti()" title="More Confetti!">
+          <i class="fa-solid fa-party-horn"></i> 🎉
+        </button>
+        <button class="icon-btn" onclick="toggleAudio()" title="Play Music">
+          <i class="fa-solid fa-music" id="musicIcon"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Audio Asset -->
+  <audio id="bgMusic" loop src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8a73562.mp3?filename=happy-birthday-152002.mp3"></audio>
+
+  <script>
+    const revealBox = document.getElementById('revealBox');
+    const surpriseContent = document.getElementById('surpriseContent');
+    const bgMusic = document.getElementById('bgMusic');
+    const musicIcon = document.getElementById('musicIcon');
+    const flame = document.getElementById('flame');
+
+    function revealSurprise() {
+      revealBox.style.display = 'none';
+      surpriseContent.classList.add('active');
+
+      // Play Background Audio
+      bgMusic.play().then(() => {
+        musicIcon.classList.replace('fa-music', 'fa-volume-high');
+      }).catch(() => {
+        // Autoplay restricted fallback
+      });
+
+      // Launch Initial Confetti Burst
+      launchConfetti();
+    }
+
+    function launchConfetti() {
+      const duration = 3 * 1000;
+      const end = Date.now() + duration;
+
+      (function frame() {
+        confetti({
+          particleCount: 5,
+          angle: 60,
+          spread: 55,
+          origin: { x: 0 },
+          colors: ['#ff7675', '#fd79a8', '#ffeaa7', '#74b9ff']
+        });
+        confetti({
+          particleCount: 5,
+          angle: 120,
+          spread: 55,
+          origin: { x: 1 },
+          colors: ['#ff7675', '#fd79a8', '#ffeaa7', '#74b9ff']
+        });
+
+        if (Date.now() < end) {
+          requestAnimationFrame(frame);
+        }
+      })();
+    }
+
+    function triggerMoreConfetti() {
+      confetti({
+        particleCount: 100,
+        spread: 70,
+        origin: { y: 0.6 }
+      });
+    }
+
+    function toggleCandle() {
+      flame.classList.toggle('blown-out');
+      if (flame.classList.contains('blown-out')) {
+        triggerMoreConfetti();
+      }
+    }
+
+    function toggleAudio() {
+      if (bgMusic.paused) {
+        bgMusic.play();
+        musicIcon.classList.replace('fa-music', 'fa-volume-high');
+        musicIcon.classList.replace('fa-volume-xmark', 'fa-volume-high');
+      } else {
+        bgMusic.pause();
+        musicIcon.classList.replace('fa-volume-high', 'fa-volume-xmark');
+      }
+    }
+  </script>
+</body>
+</html>
